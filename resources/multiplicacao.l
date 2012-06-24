@@ -9,8 +9,6 @@ goto fim
 y=assign(x2)
 goto fim
 
-[inicio] y = assign(x1)
+[inicio] y = add(y,x1)
 x2 = x2 - 1
-[times] y = add(y,x1)
-x2 = x2 - 1
-if x2 != 0 goto times
+if x2 != 0 goto inicio

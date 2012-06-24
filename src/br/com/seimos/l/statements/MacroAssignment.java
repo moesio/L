@@ -27,7 +27,11 @@ public class MacroAssignment extends AbstractStatement {
 	@Override
 	public String execute(LinkedHashMap<String, String> variables) throws Exception {
 
-			Program program = new Program(variables.get(macro));
+			String filePath = variables.get(macro);
+			if (filePath == null) {
+				throw new Exception("Macro \"".concat(macro).concat("\" não definida"));
+			}
+			Program program = new Program(filePath);
 			String[] vars = variableList.split(",");
 			StringBuilder macroVariables = new StringBuilder();
 			int i = 1;

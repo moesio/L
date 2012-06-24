@@ -1,5 +1,7 @@
 package br.com.seimos.l;
 
+import java.io.IOException;
+
 import br.com.seimos.l.struct.Statement;
 import br.com.seimos.l.struct.StatementFactory;
 
@@ -9,11 +11,11 @@ public class Main {
 	 * @param args
 	 * @throws Exception
 	 */
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		
-		System.out.println("+-----------------------------------------------------+");
-		System.out.println("|                  L Simulator                        |");
-		System.out.println("+-----------------------------------------------------+");
+		System.out.println("+-----------------------------------------------+");
+		System.out.println("|                  L Simulator                  |");
+		System.out.println("+-----------------------------------------------+");
 		if (args.length == 0) {
 			showUsage();
 		}
@@ -24,20 +26,22 @@ public class Main {
 		System.out.println();
 		System.out.println();
 
-		Program program = new Program(args[0]);
-		if (!program.isEmpty()) {
-			StringBuilder vars = new StringBuilder();
-			for (int i = 1; i < args.length; i++) {
-				vars.append("x" + i + "=" + args[i]).append(",");
-			}
-			Statement statement;
-			try {
+		try {
+			Program program = new Program(args[0]);
+			if (!program.isEmpty()) {
+				StringBuilder vars = new StringBuilder();
+				for (int i = 1; i < args.length; i++) {
+					vars.append("x" + i + "=" + args[i]).append(",");
+				}
+				Statement statement;
 				statement = StatementFactory.getStatement(vars.toString().replaceAll(",$", ""));
 				program.put(0, statement);
 				program.run();
-			} catch (Exception e) {
-				System.err.println(e.getMessage());
 			}
+		} catch (IOException e) {
+			System.err.println("Erro na leitura do arquivo " + e.getMessage());
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
 		}
 
 		//		Pattern pattern = Pattern.compile("\\s*(\\[[a-zA-Z]+\\])?\\s*(([xzXZ][0-9]*)|([yY])+)\\s*=\\s*(([a-zA-Z_][a-zA-Z0-9_]*))\\([xzXZ][0-9]*(,[xzXZ][0-9]*)*\\)\\s*");

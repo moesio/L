@@ -21,7 +21,7 @@ public class Program extends LinkedHashMap<Object, Statement> {
 	private ArrayList<String> errors = new ArrayList<String>();
 	private String filePath;
 
-	public Program(String filePath) throws Exception {
+	public Program(String filePath) throws IOException {
 		this.filePath = filePath;
 		readFile();
 	}
@@ -39,52 +39,48 @@ public class Program extends LinkedHashMap<Object, Statement> {
 	 * 
 	 * @throws Formato de linha inválido
 	 */
-	private void readFile() throws Exception {
+	private void readFile() throws IOException {
 		//		System.out.println("Lendo arquivo " + filePath);
 		String str = null;
-		try {
-			BufferedReader in = new BufferedReader(new FileReader(filePath));
-			int linha = 0;
-			boolean assignmentAllowed = true;
-			while ((str = in.readLine()) != null) {
-				Statement statement = null;
-				try {
-					linha++;
-					statement = StatementFactory.getStatement(str);
-					if (statement.getClass() == Init.class) {
-						if (!assignmentAllowed) {
-							errors.add(new StringBuilder()
-									.append("Linha ")
-									.append(linha)
-									.append(": [Inicialização de variáveis só é aceita na primeira linha] ")
-									.append(str).toString());
-						}
+		BufferedReader in = new BufferedReader(new FileReader(filePath));
+		int linha = 0;
+		boolean assignmentAllowed = true;
+		while ((str = in.readLine()) != null) {
+			Statement statement = null;
+			try {
+				linha++;
+				statement = StatementFactory.getStatement(str);
+				if (statement.getClass() == Init.class) {
+					if (!assignmentAllowed) {
+						errors.add(new StringBuilder()
+								.append("Linha ")
+								.append(linha)
+								.append(": [Inicialização de variáveis só é aceita na primeira linha] ")
+								.append(str).toString());
 					}
-					if (statement.getClass() != Comment.class) {
-						assignmentAllowed = false;
-					}
-					if (statement.getClass() == MacroDefinition.class) {
-						((MacroDefinition) statement).setRoot(filePath);
-					}
-
-					put(linha, statement);
-					String label = statement.getLabel();
-					if (label != null) {
-						if (labels.containsKey(label)) {
-							errors.add(new StringBuffer().append(linha).append(": label ")
-									.append(label).append(" já existe").toString());
-						}
-						labels.put(label, linha);
-					}
-				} catch (Exception e) {
-					errors.add(new StringBuffer().append("Linha ").append(linha).append(": [")
-							.append(e.getMessage()).append("] ").append(str).toString());
 				}
+				if (statement.getClass() != Comment.class) {
+					assignmentAllowed = false;
+				}
+				if (statement.getClass() == MacroDefinition.class) {
+					((MacroDefinition) statement).setRoot(filePath);
+				}
+
+				put(linha, statement);
+				String label = statement.getLabel();
+				if (label != null) {
+					if (labels.containsKey(label)) {
+						errors.add(new StringBuffer().append(linha).append(": label ")
+								.append(label).append(" já existe").toString());
+					}
+					labels.put(label, linha);
+				}
+			} catch (Exception e) {
+				errors.add(new StringBuffer().append("Linha ").append(linha).append(": [")
+						.append(e.getMessage()).append("] ").append(str).toString());
 			}
-			in.close();
-		} catch (IOException e) {
-			System.out.println("Erro na leitura do arquivo: " + e.getLocalizedMessage());
 		}
+		in.close();
 	}
 
 	public void run() throws Exception {
@@ -104,10 +100,12 @@ public class Program extends LinkedHashMap<Object, Statement> {
 						System.out.println(filePath);
 					}
 					if (currentLine != 0) {
-						System.out.print(new StringBuilder()
-								.append("Line ")
-								.append(currentLine)
-								.append(statement.getLabel() == null ? "" : " [".concat(statement.getLabel()).concat("]")).append(":").append(" "));
+						System.out.print("Line "//
+								.concat(Integer.toString(currentLine))//
+										.concat( //
+										statement.getLabel() == null ? ": " : " [".concat(
+												statement.getLabel()).concat("]: ")//
+										));
 						showVariablesValue();
 					}
 					if (next == null) {
@@ -136,7 +134,8 @@ public class Program extends LinkedHashMap<Object, Statement> {
 	}
 
 	private void showVariablesValue() {
-		System.out.println(variables.toString().replaceAll(",?\\s[a-zA-Z0-9_]+=[a-zA-Z_/\\.]+", ""));
+		System.out
+				.println(variables.toString().replaceAll(",?\\s[a-zA-Z0-9_]+=[a-zA-Z_/\\.]+", ""));
 	}
 
 	public LinkedHashMap<String, String> getVariables() {
