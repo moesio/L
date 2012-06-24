@@ -19,17 +19,15 @@ public class Main {
 		if (!program.isEmpty()) {
 			StringBuilder vars = new StringBuilder();
 			for (int i = 1; i < args.length; i++) {
-				vars.append(args[i]).append(",");
+				vars.append("x" + i + "=" + args[i]).append(",");
 			}
 			Statement statement;
 			try {
-				statement = StatementFactory.getStatement(vars.toString()
-						.replaceAll(",$", ""));
+				statement = StatementFactory.getStatement(vars.toString().replaceAll(",$", ""));
 				program.put(0, statement);
 				program.run();
 			} catch (Exception e) {
-				System.err.println("Inicialização das variáveis não é válida");
-				showUsage();
+				System.err.println(e.getMessage());
 			}
 		}
 
@@ -44,10 +42,9 @@ public class Main {
 
 	private static void showUsage() {
 		System.out.println("Uso:");
+		System.out.println("java -jar l.jar <programa1.l> [n1 n2 n3 ... ]");
 		System.out
-				.println("java -jar l.jar <programa1.l> [x1=n1 x2=n2 ... ]");
-		System.out
-				.println("Onde x1, x2, ... são variáveis de entrada com seus respectivos valores iniciais n1, n2, ...");
+				.println("Onde n1, n2, n3 ... são respectivos valores das variáveis x1, x2, x3, ...");
 	}
 
 }

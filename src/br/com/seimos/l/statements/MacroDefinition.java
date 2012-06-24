@@ -8,6 +8,7 @@ import br.com.seimos.l.struct.AbstractStatement;
 
 public class MacroDefinition extends AbstractStatement {
 
+	public static final String pattern = "\\s*(\\[[a-zA-Z_][a-zA-Z0-9_]*\\])?\\s*macro\\s*([a-zA-Z_][a-zA-Z0-9_]*):\\s*(['\"])([a-zA-Z0-9_/]+(\\.[lL])?)\\3\\s*";
 	private String macro;
 	private String filePath;
 
@@ -16,7 +17,8 @@ public class MacroDefinition extends AbstractStatement {
 
 	public MacroDefinition(String command) {
 		super(command);
-		Pattern pattern = Pattern.compile("\\s*(\\[[a-zA-Z]+\\])?\\s*macro\\s*([a-zA-Z_][a-zA-Z0-9_]*:)\\s*(['\"])([a-zA-Z0-9_/]+(\\.[lL])?)\\3\\s*");
+//		Pattern pattern = Pattern.compile("\\s*(\\[[a-zA-Z]+\\])?\\s*macro\\s*([a-zA-Z_][a-zA-Z0-9_]*:)\\s*(['\"])([a-zA-Z0-9_/]+(\\.[lL])?)\\3\\s*");
+		Pattern pattern = Pattern.compile(MacroDefinition.pattern);
 		Matcher matcher = pattern.matcher(command);
 		if (matcher.find()) {
 			macro = matcher.group(2);

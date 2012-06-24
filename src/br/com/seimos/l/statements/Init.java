@@ -5,6 +5,9 @@ import java.util.LinkedHashMap;
 import br.com.seimos.l.struct.AbstractStatement;
 
 public class Init extends AbstractStatement {
+	
+	public static final String pattern = "((\\s*([xX][0-9]+)\\s*=\\s*[0-9]+\\s*)(,(\\s*([xX][0-9]+)\\s*=\\s*[0-9]+\\s*))*\\s*$)";
+	
 	public Init() {
 	}
 

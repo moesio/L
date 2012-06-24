@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 
 import br.com.seimos.l.statements.Comment;
 import br.com.seimos.l.statements.Init;
+import br.com.seimos.l.statements.MacroAssignment;
 import br.com.seimos.l.statements.MacroDefinition;
 import br.com.seimos.l.struct.Statement;
 import br.com.seimos.l.struct.StatementFactory;
@@ -36,8 +37,7 @@ public class Program extends LinkedHashMap<Object, Statement> {
 	 * 
 	 * Onde o label inicial é opcional
 	 * 
-	 * @throws Formato
-	 *             de linha inválido
+	 * @throws Formato de linha inválido
 	 */
 	private void readFile() throws Exception {
 		//		System.out.println("Lendo arquivo " + filePath);
@@ -49,8 +49,8 @@ public class Program extends LinkedHashMap<Object, Statement> {
 			while ((str = in.readLine()) != null) {
 				Statement statement = null;
 				try {
-					statement = StatementFactory.getStatement(str);
 					linha++;
+					statement = StatementFactory.getStatement(str);
 					if (statement.getClass() == Init.class) {
 						if (!assignmentAllowed) {
 							errors.add(new StringBuilder()
@@ -87,22 +87,27 @@ public class Program extends LinkedHashMap<Object, Statement> {
 		}
 	}
 
-	public void run() {
+	public void run() throws Exception {
 		if (errors.size() > 0) {
 			for (String erro : errors) {
 				System.out.println(erro);
 			}
+			throw new Exception("Program halted");
 		} else if (size() > 0) {
+			System.out.println(filePath);
 			Statement statement;
 			for (int currentLine = 0; currentLine <= size();) {
 				statement = get(currentLine);
 				if (statement != null && statement.getClass() != Comment.class) { // it's possible when macro is called. Its line 0 is an artificial Init command
 					String next = statement.execute(variables);
+					if (statement.getClass() == MacroAssignment.class) {
+						System.out.println(filePath);
+					}
 					if (currentLine != 0) {
-						System.out.print(new StringBuilder()/*.append("(")
-															.append(filePath).append(") ")*/
-						.append(currentLine).append(": ").append(statement.getCommand())
-								.append(" "));
+						System.out.print(new StringBuilder()
+								.append("Line ")
+								.append(currentLine)
+								.append(statement.getLabel() == null ? "" : " [".concat(statement.getLabel()).concat("]")).append(":").append(" "));
 						showVariablesValue();
 					}
 					if (next == null) {
@@ -123,14 +128,15 @@ public class Program extends LinkedHashMap<Object, Statement> {
 			if (variables.get("y") == null) {
 				variables.put("y", "0");
 			}
+			System.out.println("y = ".concat(variables.get("y")));
+			System.out.println();
 		} else {
 			System.out.println("Nada a fazer");
 		}
-		System.out.println();
 	}
 
 	private void showVariablesValue() {
-		System.out.println(variables.toString().replaceAll(",\\s*[a-z]:=.*?,", ","));
+		System.out.println(variables.toString());
 	}
 
 	public LinkedHashMap<String, String> getVariables() {

@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 import br.com.seimos.l.struct.AbstractStatement;
 
 public class Increment extends AbstractStatement {
+	public static final String pattern = "\\s*(\\[[a-zA-Z_][a-zA-Z0-9_]*\\])?\\s*(([xXzZ][0-9]*)|([yY]))\\s*=\\s*\\2\\s*\\+\\s*1\\s*";
+
 	public Increment() {
 	}
 

@@ -10,8 +10,9 @@ public interface Statement {
 	 * 
 	 * @param variables
 	 * @return next label
+	 * @throws Exception 
 	 */
-	String execute(LinkedHashMap<String, String> variables);
+	String execute(LinkedHashMap<String, String> variables) throws Exception;
 	String getVariable();
 	String getCommand();
 

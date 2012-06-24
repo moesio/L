@@ -8,6 +8,8 @@ import br.com.seimos.l.struct.AbstractStatement;
 
 public class Subtraction extends AbstractStatement {
 
+	public static final String pattern = "\\s*(\\[[a-zA-Z0-9_]+\\])?\\s*(([zZ][0-9]*)|([yY]))\\s*=\\s*\\2\\s*\\-\\s*([0-9]+)\\s*";
+
 	public Subtraction() {
 	}
 

@@ -6,6 +6,8 @@ import br.com.seimos.l.struct.AbstractStatement;
 
 public class Comment extends AbstractStatement {
 
+	public static final String pattern = "(\\s*#.*)|(\\s*//.*)";
+
 	public Comment() {
 	}
 

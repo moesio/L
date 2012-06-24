@@ -8,6 +8,8 @@ import br.com.seimos.l.struct.AbstractStatement;
 
 public class If extends AbstractStatement {
 
+	public static final String pattern = "\\s*(\\[[a-zA-Z_][a-zA-Z0-9_]*\\])?\\s*if\\s*(([xXzZ][0-9]*)|([yY]))\\s*!=\\s*0\\s*,?\\s*goto\\s*([a-zA-Z_][a-zA-Z0-9_]*)\\s*";
+
 	public If() {
 	}
 
@@ -29,6 +31,9 @@ public class If extends AbstractStatement {
 	@Override
 	public String execute(LinkedHashMap<String, String> variables) {
 		String variableValue = variables.get(getVariable());
+		if (this instanceof Goto) {
+			return getConsigneeKey();
+		}
 		if (variableValue != null) {
 			Integer value = Integer.valueOf(variableValue);
 			if (value == null) {
