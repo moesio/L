@@ -136,7 +136,7 @@ public class Program extends LinkedHashMap<Object, Statement> {
 	}
 
 	private void showVariablesValue() {
-		System.out.println(variables.toString());
+		System.out.println(variables.toString().replaceAll(",?\\s[a-zA-Z0-9_]+=[a-zA-Z_/\\.]+", ""));
 	}
 
 	public LinkedHashMap<String, String> getVariables() {

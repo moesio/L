@@ -10,10 +10,19 @@ public class Main {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-
+		
+		System.out.println("+-----------------------------------------------------+");
+		System.out.println("|                  L Simulator                        |");
+		System.out.println("+-----------------------------------------------------+");
 		if (args.length == 0) {
 			showUsage();
 		}
+		
+		for (String arg : args) {
+			System.out.print(arg.concat(" "));
+		}
+		System.out.println();
+		System.out.println();
 
 		Program program = new Program(args[0]);
 		if (!program.isEmpty()) {
